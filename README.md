@@ -15,7 +15,7 @@ Esta é uma API simples desenvolvida em Flask para gerenciar livros para doaçã
 
 ## Requisitos
 
-- Python 3
+- Python 
 - pip (gerenciador de pacotes Python)
 
 ## Instalação
