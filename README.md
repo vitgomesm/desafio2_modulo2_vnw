@@ -15,7 +15,7 @@ Esta é uma API simples desenvolvida em Flask para gerenciar livros para doaçã
 
 ## Requisitos
 
-- Python 3.x
+- Python 3
 - pip (gerenciador de pacotes Python)
 
 ## Instalação
@@ -143,6 +143,43 @@ curl -X POST http://localhost:5000/doar \
 ```bash
 curl http://localhost:5000/livros
 ```
+
+### Usando a API via Postman
+
+1. **Configurando o Postman**:
+   - Baixe e instale o [Postman](https://www.postman.com/downloads/)
+   - Crie uma nova coleção para a API de Livros
+
+2. **Cadastrando um Livro**:
+   - Crie uma nova requisição
+   - Selecione o método `POST`
+   - Digite a URL: `http://localhost:5000/doar`
+   - Selecione a aba "Body"
+   - Selecione "raw" e escolha "JSON"
+   - Cole o seguinte JSON:
+   ```json
+   {
+       "titulo": "O Senhor dos Anéis",
+       "categoria": "Fantasia",
+       "autor": "J.R.R. Tolkien",
+       "imagem_url": "https://exemplo.com/imagem.jpg"
+   }
+   ```
+   - Clique em "Send"
+   - Você receberá uma resposta com status 201 se o cadastro for bem-sucedido
+
+3. **Listando Livros**:
+   - Crie uma nova requisição
+   - Selecione o método `GET`
+   - Digite a URL: `http://localhost:5000/livros`
+   - Clique em "Send"
+   - A resposta será uma lista JSON com todos os livros cadastrados
+
+4. **Acessando a Interface Web**:
+   - Crie uma nova requisição
+   - Selecione o método `GET`
+   - Digite a URL: `http://localhost:5000`
+   - Clique em "Send"
 
 ## Dependências
 
