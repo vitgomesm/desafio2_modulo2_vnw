@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Doação de Livros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .book-card {
+            transition: transform 0.2s;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+        .book-image {
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Sistema de Doação de Livros</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Formulário de Cadastro -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Cadastrar Novo Livro</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="livroForm">
+                            <div class="mb-3">
+                                <label for="titulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="titulo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label">Categoria</label>
+                                <input type="text" class="form-control" id="categoria" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="autor" class="form-label">Autor</label>
+                                <input type="text" class="form-control" id="autor" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="imagem_url" class="form-label">URL da Imagem</label>
+                                <input type="url" class="form-control" id="imagem_url" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Cadastrar Livro</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Livros -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Livros Cadastrados</h5>
+                        <button class="btn btn-outline-primary btn-sm" onclick="carregarLivros()">
+                            Atualizar Lista
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="listaLivros" class="row g-3">
+                            <!-- Os livros serão inseridos aqui via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para carregar os livros
+        async function carregarLivros() {
+            try {
+                const response = await fetch('http://localhost:5000/livros');
+                const livros = await response.json();
+                
+                const listaLivros = document.getElementById('listaLivros');
+                listaLivros.innerHTML = '';
+                
+                livros.forEach(livro => {
+                    const livroCard = `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card book-card h-100">
+                                <img src="${livro.imagem_url}" class="card-img-top book-image" alt="${livro.titulo}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${livro.titulo}</h5>
+                                    <p class="card-text">
+                                        <strong>Autor:</strong> ${livro.autor}<br>
+                                        <strong>Categoria:</strong> ${livro.categoria}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    listaLivros.innerHTML += livroCard;
+                });
+            } catch (error) {
+                console.error('Erro ao carregar livros:', error);
+                alert('Erro ao carregar a lista de livros');
+            }
+        }
+
+        // Função para cadastrar um novo livro
+        document.getElementById('livroForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const livro = {
+                titulo: document.getElementById('titulo').value,
+                categoria: document.getElementById('categoria').value,
+                autor: document.getElementById('autor').value,
+                imagem_url: document.getElementById('imagem_url').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/doar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(livro)
+                });
+
+                if (response.ok) {
+                    alert('Livro cadastrado com sucesso!');
+                    document.getElementById('livroForm').reset();
+                    carregarLivros();
+                } else {
+                    throw new Error('Erro ao cadastrar livro');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao cadastrar o livro');
+            }
+        });
+
+        // Carregar livros ao iniciar a página
+        carregarLivros();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
