@@ -1,29 +1,67 @@
 # API de Gerenciamento de Livros
 
-Esta é uma API simples desenvolvida em Flask para gerenciar livros para doação.
+Esta é uma API simples desenvolvida em Flask para gerenciar livros para doação, com uma interface web amigável.
+
+## Estrutura do Projeto
+
+```
+.
+├── app.py              # Arquivo principal da aplicação Flask
+├── database.db         # Banco de dados SQLite
+├── requirements.txt    # Dependências do projeto
+└── templates/         # Pasta com os templates HTML
+    └── index.html     # Interface web da aplicação
+```
 
 ## Requisitos
 
-- Python 
-- Flask
-- Flask-CORS
+- Python 3.x
+- pip (gerenciador de pacotes Python)
 
 ## Instalação
 
-1. Clone este repositório
-2. Instale as dependências:
+1. Clone este repositório:
+```bash
+git clone [URL_DO_REPOSITÓRIO]
+cd [NOME_DO_DIRETÓRIO]
+```
+
+2. Crie um ambiente virtual (recomendado):
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Linux/Mac
+python3 -m venv venv
+source venv/bin/activate
+```
+
+3. Instale as dependências:
 ```bash
 pip install -r requirements.txt
 ```
 
-## Executando a API
+## Executando a Aplicação
 
-Para iniciar a API, execute:
+1. Ative o ambiente virtual (se estiver usando):
+```bash
+# Windows
+venv\Scripts\activate
+
+# Linux/Mac
+source venv/bin/activate
+```
+
+2. Inicie a aplicação:
 ```bash
 python app.py
 ```
 
-A API estará disponível em `http://localhost:5000`
+3. Acesse a aplicação no navegador:
+```
+http://localhost:5000
+```
 
 ## Interface Web
 
@@ -33,11 +71,6 @@ A API possui uma interface web amigável que permite:
 2. Visualizar todos os livros cadastrados em um layout de cards
 3. Atualizar a lista de livros em tempo real
 
-Para acessar a interface web, basta abrir seu navegador e acessar:
-```
-http://localhost:5000
-```
-
 ### Funcionalidades da Interface
 
 - **Formulário de Cadastro**: Permite inserir todos os dados do livro de forma simples
@@ -45,48 +78,56 @@ http://localhost:5000
 - **Atualização em Tempo Real**: A lista de livros é atualizada automaticamente após cada cadastro
 - **Design Responsivo**: A interface se adapta a diferentes tamanhos de tela
 
-## Exemplos Rápidos de Uso
+## Endpoints da API
 
-### Cadastrar um Livro:
-Faça uma requisição POST para `/doar` com o seguinte JSON:
+### GET /
+- **Descrição**: Retorna a interface web da aplicação
+- **URL**: `http://localhost:5000/`
+- **Método**: GET
+
+### POST /doar
+- **Descrição**: Cadastra um novo livro no banco de dados
+- **URL**: `http://localhost:5000/doar`
+- **Método**: POST
+- **Corpo da Requisição**:
 ```json
 {
-    "titulo": "Dom Quixote",
-    "categoria": "Literatura Clássica",
-    "autor": "Miguel de Cervantes",
+    "titulo": "O Senhor dos Anéis",
+    "categoria": "Fantasia",
+    "autor": "J.R.R. Tolkien",
     "imagem_url": "https://exemplo.com/imagem.jpg"
 }
 ```
+- **Resposta de Sucesso**: Status 201
+- **Resposta de Erro**: Status 400 ou 500
 
-### Listar Livros:
-Faça uma requisição GET para `/livros` para ver todos os livros cadastrados.
+### GET /livros
+- **Descrição**: Retorna a lista de todos os livros cadastrados
+- **URL**: `http://localhost:5000/livros`
+- **Método**: GET
+- **Resposta**: Lista de livros em formato JSON
 
-### Rota Inicial:
-Acesse a rota `/` para ver a mensagem de boas-vindas e as instruções.
+## Estrutura do Banco de Dados
 
-## Como Usar a API
+A tabela `LIVROS` possui os seguintes campos:
+- `id` (INTEGER PRIMARY KEY AUTOINCREMENT): Identificador único do livro
+- `titulo` (TEXT NOT NULL): Título do livro
+- `categoria` (TEXT NOT NULL): Categoria do livro
+- `autor` (TEXT NOT NULL): Nome do autor
+- `imagem_url` (TEXT NOT NULL): URL da imagem de capa do livro
 
-### 1. Acessando a Página Inicial (GET /)
+## Exemplos de Uso
 
-Para ver a mensagem de boas-vindas, você pode:
+### Usando a Interface Web
 
-**Usando o navegador:**
-- Abra seu navegador e acesse: `http://localhost:5000`
+1. Acesse `http://localhost:5000` no navegador
+2. Use o formulário à esquerda para cadastrar um novo livro
+3. A lista de livros será atualizada automaticamente
+4. Use o botão "Atualizar Lista" para recarregar os livros manualmente
 
-**Usando o curl:**
-```bash
-curl http://localhost:5000
-```
+### Usando a API via curl
 
-**Usando o Postman:**
-1. Crie uma nova requisição
-2. Selecione o método GET
-3. Digite a URL: `http://localhost:5000`
-4. Clique em "Send"
-
-### 2. Cadastrando um Novo Livro (POST /doar)
-
-**Usando o curl:**
+1. Cadastrar um livro:
 ```bash
 curl -X POST http://localhost:5000/doar \
 -H "Content-Type: application/json" \
@@ -98,65 +139,29 @@ curl -X POST http://localhost:5000/doar \
 }'
 ```
 
-**Usando o Postman:**
-1. Crie uma nova requisição
-2. Selecione o método POST
-3. Digite a URL: `http://localhost:5000/doar`
-4. Selecione a aba "Body"
-5. Selecione "raw" e "JSON"
-6. Cole o seguinte JSON:
-```json
-{
-    "titulo": "O Senhor dos Anéis",
-    "categoria": "Fantasia",
-    "autor": "J.R.R. Tolkien",
-    "imagem_url": "https://exemplo.com/imagem.jpg"
-}
-```
-7. Clique em "Send"
-
-### 3. Listando Todos os Livros (GET /livros)
-
-**Usando o navegador:**
-- Acesse: `http://localhost:5000/livros`
-
-**Usando o curl:**
+2. Listar todos os livros:
 ```bash
 curl http://localhost:5000/livros
 ```
 
-**Usando o Postman:**
-1. Crie uma nova requisição
-2. Selecione o método GET
-3. Digite a URL: `http://localhost:5000/livros`
-4. Clique em "Send"
+## Dependências
 
-## Endpoints
+O projeto utiliza as seguintes bibliotecas principais:
+- Flask==3.0.2: Framework web
+- Flask-CORS==4.0.0: Suporte a CORS
+- Werkzeug==3.0.1: Utilitários WSGI
+- Jinja2==3.1.3: Motor de templates
 
-### GET /
-Retorna uma mensagem de boas-vindas
+Para ver todas as dependências, consulte o arquivo `requirements.txt`.
 
-### POST /doar
-Cadastra um novo livro no banco de dados.
+## Contribuindo
 
-Exemplo de requisição:
-```json
-{
-    "titulo": "O Senhor dos Anéis",
-    "categoria": "Fantasia",
-    "autor": "J.R.R. Tolkien",
-    "imagem_url": "https://exemplo.com/imagem.jpg"
-}
-```
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-### GET /livros
-Retorna a lista de todos os livros cadastrados.
+## Licença
 
-## Estrutura do Banco de Dados
-
-A tabela `LIVROS` possui os seguintes campos:
-- id (INTEGER PRIMARY KEY AUTOINCREMENT)
-- titulo (TEXT NOT NULL)
-- categoria (TEXT NOT NULL)
-- autor (TEXT NOT NULL)
-- imagem_url (TEXT NOT NULL) 
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes. 
